@@ -1,8 +1,8 @@
 {
     "name_player": "couille",
-    "dices": [
-        {
-            "type": "temp",
+    "dices": {
+        "test": {
+            "type": "permanent",
             "values": {
                 "0": "Nothing",
                 "1": "Control",
@@ -11,7 +11,7 @@
                 "4": "Zone",
                 "5": "Power"
             },
-            "name": "default"
+            "name": "test"
         }
-    ]
+    }
 }
