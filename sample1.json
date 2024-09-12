@@ -1,0 +1,17 @@
+{
+    "name_player": "couille",
+    "dices": [
+        {
+            "type": "temp",
+            "values": {
+                "0": "Nothing",
+                "1": "Control",
+                "2": "Aim",
+                "3": "Range",
+                "4": "Zone",
+                "5": "Power"
+            },
+            "name": "default"
+        }
+    ]
+}
