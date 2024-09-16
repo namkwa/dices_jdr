@@ -2,6 +2,7 @@
 {} = optionnal argument
 
 dice_types : 
+
     permanent : the dice can be rolled whenever
 
     rest : the dice can be rolled once between every rest
