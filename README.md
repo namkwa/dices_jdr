@@ -3,7 +3,9 @@
 
 dice_types : 
     permanent : the dice can be rolled whenever
+
     rest : the dice can be rolled once between every rest
+    
     unique : the dice can be rolled once
 
 register [glyphs] [dice_name] {type(default is permanent)} : creates a new dice
