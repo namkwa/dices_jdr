@@ -4,54 +4,120 @@ glyphs_ref = {"N": "Nothing", "C": "Control", "A": "Aim", "R": "Range", "Z": "Zo
 
 
 class Dice:
-    def __init__(self, type, values, name):
-        self.type = type
-        self.values = values
-        self.name = name
+    def __init__(self, type_dice, values_dice):
+        self.type_dice = type_dice
+        self.values_dice = values_dice
+        self.state_dice = True
 
     def roll(self):
-        return random.choice(list(self.values.values()))
+        return random.choice(list(self.values_dice.values()))
 
     def convert_to_json(self):
-        json_dice = {}
-        json_dice["type"] = self.type
-        json_dice["values"] = self.values
-        json_dice["name"] = self.name
-        return json_dice
+        dice_json = {}
+        dice_json["type_dice"] = self.type_dice
+        dice_json["values_dice"] = self.values_dice
+        dice_json["state_dice"] = self.state_dice
+        return dice_json
+
+    def convert_from_json(self, dice_json):
+        self.type_dice = dice_json.type_dice
+        self.values_dice = dice_json.values_dice
 
 
 class Player:
     def __init__(self):
         self.dices = {}
-        self.name_player = "couille"
+        self.name_player = "joueur1"
 
-    def register(self, glyphs, type, name):
-        values = {}
+    def register(self, glyphs, name, type="permanent"):
+        values_dice = {}
         for i, char in enumerate(glyphs):
-            values[i] = glyphs_ref[char]
-        self.dices[name] = Dice(type, values, name)
+            values_dice[i] = glyphs_ref[char]
+        self.dices[name] = Dice(type, values_dice)
+
+    def roll(self, dice_name):
+        if dice_name in self.dices:
+            print(self.dices[dice_name].roll())
+            if self.dices[dice_name].type_dice == "rest":
+                self.dices[dice_name].state_dice = False
+            elif self.dices[dice_name].type_dice == "unique":
+                self.dices.pop(dice_name)
+        else:
+            print("incorrect name")
+
+    def rest(self):
+        for dice in self.dices:
+            if self.dices[dice].type_dice == "rest":
+                self.dices[dice].state_dice = True
 
     def convert_to_json(self):
-        data_to_store = {}
-        data_to_store["name_player"] = self.name_player
-        data_to_store["dices"] = {}
+        player_json = {}
+        player_json["name_player"] = self.name_player
+        player_json["dices"] = {}
         for dice in self.dices:
-            data_to_store["dices"][dice] = self.dices[dice].convert_to_json()
-        json_object = json.dumps(data_to_store, indent=4)
-        with open("sample1.json", "w") as outfile:
-            outfile.write(json_object)
+            player_json["dices"][dice] = self.dices[dice].convert_to_json()
+        return player_json
+
+    def convert_from_json(self, player_json):
+        self.name_player = player_json["name_player"]
+        for dice in player_json["dices"]:
+            self.dices[dice] = Dice(player_json["dices"][dice]["type_dice"], player_json["dices"][dice]["values_dice"])
+
+    def print_dices(self):
+        output = ""
+        for dice in self.dices:
+            output += dice + " : " + self.dices[dice].type_dice + (" (usable)" if self.dices[dice].state_dice else " (not usable)") + "\n    "
+            for value in self.dices[dice].values_dice:
+                output += value + " : " + self.dices[dice].values_dice[value] + "\n    "
+        print(output)
+
+    def delete_dice(self, dice_name):
+        self.dices.pop(dice_name)
 
 
 player = Player()
 should_run = True
+with open("player_info.json", "r") as openfile:
+    json_object = json.load(openfile)
+    player.convert_from_json(json_object)
+
 while should_run:
     cmd = input()
     cmd_splitted = cmd.split(" ")
-    if cmd.split(" ")[0] == "register":
-        player.register(cmd.split(" ")[1], "permanent", cmd.split(" ")[2])
-        player.convert_to_json()
+    if cmd_splitted[0] == "register":
+        if len(cmd_splitted) == 3:
+            player_json = player.convert_to_json()
+            player.register(cmd_splitted[1], cmd_splitted[2])
+            json_object = json.dumps(player_json, indent=4)
+            with open("player_info.json", "w") as outfile:
+                outfile.write(json_object)
+        elif len(cmd_splitted) == 4:
+            player.register(cmd_splitted[1], cmd_splitted[2], cmd_splitted[3])
+            player_json = player.convert_to_json()
+            json_object = json.dumps(player_json, indent=4)
+            with open("player_info.json", "w") as outfile:
+                outfile.write(json_object)
+        else:
+            print("wrong number of arguments passed")
+    elif cmd_splitted[0] == "roll":
+        for i in range(len(cmd_splitted) - 1):
+            player.roll(cmd_splitted[i + 1])
+        player_json = player.convert_to_json()
+        json_object = json.dumps(player_json, indent=4)
+        with open("player_info.json", "w") as outfile:
+            outfile.write(json_object)
+    elif cmd_splitted[0] == "show":
+        player.print_dices()
+    elif cmd_splitted[0] == "rest":
+        player.rest()
+        player_json = player.convert_to_json()
+        json_object = json.dumps(player_json, indent=4)
+        with open("player_info.json", "w") as outfile:
+            outfile.write(json_object)
+
     elif cmd == "stop":
         should_run = False
-        player.convert_to_json()
-    elif cmd_splitted[0] == "roll":
-        print(player.dices[cmd_splitted[1]].roll())
+        player_json = player.convert_to_json()
+        json_object = json.dumps(player_json, indent=4)
+        with open("player_info.json", "w") as outfile:
+            outfile.write(json_object)
