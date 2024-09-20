@@ -26,3 +26,6 @@ delete [dice_name] : deletes the dice with that name
 rest : all the rest dice are now usable again
 
 stop : stops the simulation and saves all the player data into a player_info.json
+
+glyphs : 
+"N": "Nothing", "C": "Control", "A": "Aim", "R": "Range", "Z": "Zone", "P": "Power"
