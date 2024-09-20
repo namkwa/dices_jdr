@@ -1,4 +1,26 @@
 {
     "name_player": "joueur1",
-    "dices": {}
+    "dices": {
+        "de1": {
+            "type_dice": "permanent",
+            "values_dice": {
+                "0": "Nothing"
+            },
+            "state_dice": true
+        },
+        "de2": {
+            "type_dice": "permanent",
+            "values_dice": {
+                "0": "Nothing"
+            },
+            "state_dice": true
+        },
+        "de3": {
+            "type_dice": "permanent",
+            "values_dice": {
+                "0": "Nothing"
+            },
+            "state_dice": true
+        }
+    }
 }
