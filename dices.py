@@ -4,14 +4,18 @@ glyphs_ref = {"N": "Nothing", "C": "Control", "A": "Aim", "R": "Range", "Z": "Zo
 
 
 class Dice:
-    def __init__(self, type_dice, values_dice):
+    def __init__(self, type_dice, values_dice, last_result):
         self.type_dice = type_dice
         self.values_dice = values_dice
         self.state_dice = True
+        self.last_result = last_result
+        self.locked = False
 
     def roll(self):
         if self.state_dice:
-            return random.choice(list(self.values_dice.values()))
+            result = random.choice(list(self.values_dice.values()))
+            self.last_result = result
+            return result
         else:
             return "the dice cannot be rolled"
 
@@ -36,18 +40,38 @@ class Player:
         values_dice = {}
         for i, char in enumerate(glyphs):
             values_dice[i] = glyphs_ref[char]
-        self.dices[name] = Dice(type, values_dice)
+        self.dices[name] = Dice(type, values_dice, "")
         print(name + " added to your dices")
 
     def roll(self, dice_name):
         if dice_name in self.dices:
-            print(self.dices[dice_name].roll())
+            print(dice_name + " rolled " + self.dices[dice_name].roll())
             if self.dices[dice_name].type_dice == "rest":
                 self.dices[dice_name].state_dice = False
             elif self.dices[dice_name].type_dice == "unique":
                 self.dices.pop(dice_name)
         else:
             print("incorrect name")
+
+    def roll_all_permanent(self):
+        for dice_name in self.dices:
+            if self.dices[dice_name].type_dice == "permanent":
+                print(dice_name + " rolled " + self.dices[dice_name].roll())
+                if self.dices[dice_name].type_dice == "rest":
+                    self.dices[dice_name].state_dice = False
+                elif self.dices[dice_name].type_dice == "unique":
+                    self.dices.pop(dice_name)
+            else:
+                print("incorrect name")
+
+    def lock(self, dice_name):
+        self.dices[dice_name].locked = True
+        self.dices[dice_name].state_dice = False
+        print(dice_name + " locked on " + self.dices[dice_name].last_result)
+
+    def delock(self, dice_name):
+        self.dices[dice_name].locked = False
+        print("unlocked " + dice_name + " for " + self.dices[dice_name].last_result)
 
     def rest(self):
         for dice in self.dices:
@@ -65,7 +89,7 @@ class Player:
     def convert_from_json(self, player_json):
         self.name_player = player_json["name_player"]
         for dice in player_json["dices"]:
-            self.dices[dice] = Dice(player_json["dices"][dice]["type_dice"], player_json["dices"][dice]["values_dice"])
+            self.dices[dice] = Dice(player_json["dices"][dice]["type_dice"], player_json["dices"][dice]["values_dice"], "")
 
     def print_dices(self):
         output = ""
@@ -105,9 +129,16 @@ while should_run:
             print("wrong number of arguments passed")
         player.save_player_info()
     elif cmd_splitted[0] == "roll":
-        for i in range(len(cmd_splitted) - 1):
-            player.roll(cmd_splitted[i + 1])
-        player.save_player_info()
+        if len(cmd_splitted) >= 2:
+            for i in range(len(cmd_splitted) - 1):
+                player.roll(cmd_splitted[i + 1])
+            player.save_player_info()
+        elif len(cmd_splitted) == 1:
+            player.roll_all_permanent()
+    elif cmd_splitted[0] == "lock":
+        if len(cmd_splitted) >= 2:
+            for i in range(len(cmd_splitted) - 1):
+                player.lock(cmd_splitted[i + 1])
     elif cmd_splitted[0] == "show":
         player.print_dices()
     elif cmd_splitted[0] == "delete":
