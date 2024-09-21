@@ -1,4 +1,150 @@
 {
     "name_player": "joueur1",
-    "dices": {}
+    "dices": {
+        "1": {
+            "type_dice": "permanent",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "2": {
+            "type_dice": "permanent",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "3": {
+            "type_dice": "rest",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "4": {
+            "type_dice": "rest",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "5": {
+            "type_dice": "rest",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "6": {
+            "type_dice": "rest",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "7": {
+            "type_dice": "rest",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "8": {
+            "type_dice": "rest",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "9": {
+            "type_dice": "rest",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "10": {
+            "type_dice": "rest",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "11": {
+            "type_dice": "rest",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        },
+        "12": {
+            "type_dice": "rest",
+            "values_dice": {
+                "0": "Control",
+                "1": "Control",
+                "2": "Control",
+                "3": "Aim",
+                "4": "Range",
+                "5": "Zone"
+            },
+            "state_dice": true
+        }
+        
+    }
 }
