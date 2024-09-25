@@ -1,4 +1,4 @@
-import json, random
+import json, random, os
 
 glyphs_ref = {"N": "Nothing", "C": "Control", "A": "Aim", "R": "Range", "Z": "Zone", "P": "Power"}
 
@@ -65,18 +65,31 @@ class Player:
                 print("incorrect name")
 
     def lock(self, dice_name):
-        self.dices[dice_name].locked = True
-        self.dices[dice_name].state_dice = False
-        print(dice_name + " locked on " + self.dices[dice_name].last_result)
+        if dice_name in self.dices:
+            self.dices[dice_name].locked = True
+            self.dices[dice_name].state_dice = False
+            print(dice_name + " locked on " + self.dices[dice_name].last_result)
+        else:
+            print("incorrect name")
 
     def delock(self, dice_name):
-        self.dices[dice_name].locked = False
-        print("unlocked " + dice_name + " for " + self.dices[dice_name].last_result)
+        if dice_name in self.dices:
+            self.dices[dice_name].locked = False
+            print("unlocked " + dice_name + " for " + self.dices[dice_name].last_result)
+        else:
+            print("incorrect name")
 
     def rest(self):
         for dice in self.dices:
             if self.dices[dice].type_dice == "rest":
                 self.dices[dice].state_dice = True
+
+    def rest_dice(self, dice_name):
+        if dice_name in self.dices:
+            if self.dices[dice_name].type_dice == "rest":
+                self.dices[dice_name].state_dice = True
+        else:
+            print("incorrect name")
 
     def convert_to_json(self):
         player_json = {}
@@ -94,7 +107,10 @@ class Player:
     def print_dices(self):
         output = ""
         for dice in self.dices:
-            output += dice + " : " + self.dices[dice].type_dice + (" (usable)" if self.dices[dice].state_dice else " (not usable)") + "\n    "
+            output += dice + " : " + self.dices[dice].type_dice + (" (usable)" if self.dices[dice].state_dice else " (not usable)")
+            if self.dices[dice].locked:
+                output += " locked on " + self.dices[dice].last_result
+            output += "\n    "
             for value in self.dices[dice].values_dice:
                 output += str(value) + " : " + str(self.dices[dice].values_dice[value]) + "\n    "
             output += "\n"
@@ -113,13 +129,16 @@ class Player:
 
 player = Player()
 should_run = True
-with open("player_info.json", "r") as openfile:
-    json_object = json.load(openfile)
-    player.convert_from_json(json_object)
+if os.path.isfile("filename.txt"):
+    with open("player_info.json", "r") as openfile:
+        json_object = json.load(openfile)
+        player.convert_from_json(json_object)
 
 while should_run:
     cmd = input()
     cmd_splitted = cmd.split(" ")
+
+    # register
     if cmd_splitted[0] == "register":
         if len(cmd_splitted) == 3:
             player.register(cmd_splitted[1], cmd_splitted[2])
@@ -128,29 +147,54 @@ while should_run:
         else:
             print("wrong number of arguments passed")
         player.save_player_info()
+
+    # roll
     elif cmd_splitted[0] == "roll":
         if len(cmd_splitted) >= 2:
             for i in range(len(cmd_splitted) - 1):
                 player.roll(cmd_splitted[i + 1])
+                player.roll_all_permanent()
             player.save_player_info()
         elif len(cmd_splitted) == 1:
             player.roll_all_permanent()
+
+    # lock
     elif cmd_splitted[0] == "lock":
         if len(cmd_splitted) >= 2:
             for i in range(len(cmd_splitted) - 1):
                 player.lock(cmd_splitted[i + 1])
+
+    # delock
+    elif cmd_splitted[0] == "delock":
+        if len(cmd_splitted) >= 2:
+            for i in range(len(cmd_splitted) - 1):
+                player.delock(cmd_splitted[i + 1])
+
+    # show
     elif cmd_splitted[0] == "show":
         player.print_dices()
+
+    # delete
     elif cmd_splitted[0] == "delete":
         for i in range(len(cmd_splitted) - 1):
             player.delete_dice(cmd_splitted[i + 1])
         player.save_player_info()
-    elif cmd_splitted[0] == "rest":
-        player.rest()
 
+    # rest
+    elif cmd_splitted[0] == "rest":
+        if len(cmd_splitted) == 1:
+            player.rest()
+        elif len(cmd_splitted) >= 2:
+            for i in range(len(cmd_splitted) - 1):
+                player.rest_dice(cmd_splitted[i + 1])
+
+    # stop
     elif cmd == "stop":
         should_run = False
         player_json = player.convert_to_json()
         json_object = json.dumps(player_json, indent=4)
         with open("player_info.json", "w") as outfile:
             outfile.write(json_object)
+
+    else:
+        print("tu t'es trompé de commande ratio")
