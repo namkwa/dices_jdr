@@ -11,9 +11,7 @@ dice_types :
 
 register [glyphs] [dice_name] {type(default is permanent)} : creates a new dice
 
-roll : rolls all permanent dices
-
-roll [dice_name] : rolls the dice with that name, if the dice is unique it will be deleted, and if it is rest it will not be usable before the next rest
+roll [dice_name] : rolls the dice with that name, if the dice is unique it will be deleted, and if it is rest it will not be usable before the next rest, also rolls all permanent dices
 
 lock [dice_name] : locks the specified dice with his last value
 
@@ -24,6 +22,8 @@ show : prints in the console all the dices available
 delete [dice_name] : deletes the dice with that name
 
 rest : all the rest dice are now usable again
+
+rest [dice_name (multiple)] : rest the specified dices
 
 stop : stops the simulation and saves all the player data into a player_info.json
 
