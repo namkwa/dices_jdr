@@ -129,7 +129,7 @@ class Player:
 
 player = Player()
 should_run = True
-if os.path.isfile("filename.txt"):
+if os.path.isfile("player_info.json"):
     with open("player_info.json", "r") as openfile:
         json_object = json.load(openfile)
         player.convert_from_json(json_object)
