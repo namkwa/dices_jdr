@@ -45,8 +45,8 @@ class Player:
         print(name + " added to your dices")
 
     def roll(self, dice_name):
-        if dice_name in self.dices :
-            if self.dices[dice_name].type_dice != "permanent" and self.dices[dice_name].locked == False :
+        if dice_name in self.dices:
+            if self.dices[dice_name].type_dice != "permanent" and self.dices[dice_name].locked == False:
                 print(dice_name + " rolled " + self.dices[dice_name].roll())
                 if self.dices[dice_name].type_dice == "rest":
                     self.dices[dice_name].state_dice = False
@@ -54,14 +54,14 @@ class Player:
                     self.dices[dice_name].state_dice = False
                     if self.dices[dice_name].disappearing == False:
                         self.dices[dice_name].disappearing = True
-                        print("Utilisation du dé unique "+dice_name)
+                        print("Utilisation du dé unique " + dice_name)
         else:
             print("incorrect name")
 
     def roll_all_permanent(self):
         self.check_disappearing_dices()
         for dice_name in self.dices:
-            if self.dices[dice_name].type_dice == "permanent" and self.dices[dice_name].locked == False :
+            if self.dices[dice_name].type_dice == "permanent" and self.dices[dice_name].locked == False:
                 print(dice_name + " rolled " + self.dices[dice_name].roll())
                 if self.dices[dice_name].type_dice == "rest":
                     self.dices[dice_name].state_dice = False
@@ -75,7 +75,7 @@ class Player:
                 self.dices[dice_name].state_dice = False
                 print(dice_name + " locked on " + self.dices[dice_name].last_result)
             else:
-                print("Le dé "+dice_name+" n'a pas été lancé")
+                print("Le dé " + dice_name + " n'a pas été lancé")
         else:
             print("incorrect name")
 
@@ -93,12 +93,12 @@ class Player:
         for dice in self.dices:
             if self.dices[dice].type_dice == "rest" and self.dices[dice].state_dice == False:
                 self.dices[dice].state_dice = True
-                output+= dice + ", "
-        if(output != ""):
-            print("Les dés "+output+"ont été reposés")
+                output += dice + ", "
+        output = output[0:-2]
+        if output != "":
+            print("Les dés " + output + "ont été reposés")
         else:
             print("Aucun dé à restaurer")
-        
 
     def rest_dice(self, dice_name):
         if dice_name in self.dices:
@@ -109,8 +109,6 @@ class Player:
                 print("Le dé " + dice_name + " n'est pas à restaurer")
         else:
             print("incorrect name")
-
-        
 
     def convert_to_json(self):
         player_json = {}
@@ -130,7 +128,7 @@ class Player:
         for dice in self.dices:
             output += dice + " : " + self.dices[dice].type_dice
             if self.dices[dice].type_dice != "permanent":
-                output += (" (usable)" if self.dices[dice].state_dice else " (not usable)")
+                output += " (usable)" if self.dices[dice].state_dice else " (not usable)"
             if self.dices[dice].disappearing:
                 output += " disappearing"
             if self.dices[dice].locked:
@@ -151,11 +149,11 @@ class Player:
         with open("player_info.json", "w") as outfile:
             outfile.write(json_object)
 
-    def print_lock_dices(self):
+    def print_locked_dices(self):
         output = ""
         for dice in self.dices:
             if self.dices[dice].locked:
-                output+= dice + " locked on " + self.dices[dice].last_result + "\n"
+                output += dice + " locked on " + self.dices[dice].last_result + "\n"
         if output != "":
             print("\nLocked : ")
             print(output)
@@ -165,10 +163,8 @@ class Player:
         for dice in self.dices:
             if self.dices[dice].disappearing and self.dices[dice].locked == False:
                 disappearing_dices.append(dice)
-        
-        for dice in disappearing_dices:
-            print(dice+" disparaît")
-            self.dices.pop(dice)
+                print(dice + " disparaît")
+                self.dices.pop(dice)
 
 
 player = Player()
@@ -202,7 +198,7 @@ while should_run:
             for i in range(len(cmd_splitted) - 1):
                 player.roll(cmd_splitted[i + 1])
             player.save_player_info()
-        player.print_lock_dices()
+        player.print_locked_dices()
 
     # lock
     elif cmd_splitted[0] == "lock":
@@ -248,5 +244,5 @@ while should_run:
 
     else:
         print("tu t'es trompé de commande ratio")
-    
+
     print("\n")
